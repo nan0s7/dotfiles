@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Waterfox
+Icon=/home/scott/Apps/waterfox/browser/icons/mozicon128.png
+Path=/home/scott/Apps/waterfox/
+Exec=/home/scott/Apps/waterfox/waterfox %u

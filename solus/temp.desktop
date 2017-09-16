@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=nan0s7's fan curve script
+Type=Application
+Path=/home/scott/Projects/nfancurve/
+Exec=/home/scott/Projects/nfancurve/temp.sh
