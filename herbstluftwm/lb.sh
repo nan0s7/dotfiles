@@ -1,48 +1,48 @@
 #!/bin/bash
 
-slp=0
-per=0
-cur=0
-smallest=1
-# battery, date
-declare -a delay=( 60 60 )
+slp_track=0
 
-del_ln=${#delay[@]}
+function finish {
+	unset per
+	unset cur
+	unset wind
+	unset desk
+	unset slp_track
+}
+trap finish EXIT
 
-function get_smallest {
-	tmp=${delay[0]}
-	for i in `seq 1 $del_ln`; do
-		if [ "${delay[$i]}" -lt "$tmp" ]; then
-			tmp="${delay[$i]}"
-		fi
-	done
-	smallest=$tmp
+function get_focused_window {
+	wind=$(xdotool getwindowfocus getwindowname)
 }
 
-function battery {
-	if [ "$1" -eq 0 ]; then
-		per=$(acpi --battery | cut -d, -f2)
-	elif [ "$1" -eq ${delay[0]} ]; then
-		per=$(acpi --battery | cut -d, -f2)
-		slp=1
+function get_battery {
+	if [ "$slp_track" -eq 0 ]; then
+		per=$(acpi --battery) #| cut -d, -f2)
+		per=${per:11}
 	fi
 }
 
 function get_date {
-	if [ "$1" -eq 0 ]; then
-		cur=$(date "+%a %b %d, %H:%M")
-	elif [ "$1" -eq ${delay[1]} ]; then
-		cur=$(date "+%a %b %d, %H:%M")
-		slp=1
-	fi
+	cur=$(date "+%a %b %d, %H:%M:%S")
 }
 
-get_smallest
+function get_desktop {
+	desk=$(wmctrl -d | grep "*")
+	desk=${desk:0:1}
+}
+
+function update_info {
+	get_battery
+	get_date
+	get_desktop
+	echo "%{l}$desk""%{c}$cur""%{r}$per"
+}
 
 while true; do
-	battery $slp
-	get_date $slp
-	echo "%{c}$cur""%{r}$per"
-	slp=$[ $slp + 1 ]
-	sleep $smallest
+	update_info
+	slp_track=$[ $slp_track + 1 ]
+	if [ "$slp_track" -eq 59 ]; then
+		slp_track=0
+	fi
+	sleep 1
 done
