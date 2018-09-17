@@ -1,0 +1,13 @@
+#!/bin/bash
+
+xmon="0x1c00007"
+
+case $1 in
+	("s") xdg-screensaver suspend "$xmon";;
+	("r") xdg-screensaver resume "$xmon";;
+	("a") xdg-screensaver activate;;
+	("l") xdg-screensaver lock;;
+	("i") xdg-screensaver status;;
+	("x") xdg-screensaver reset;;
+	(*) printf %s\\n "(s)uspend (r)esume (a)ctivate (l)ock (i)status (x)reset";;
+esac
